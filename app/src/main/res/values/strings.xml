@@ -1,0 +1,150 @@
+<resources>
+
+    <!-- App Info -->
+    <string name="app_name">BP-GPS</string>
+    <string name="bp_gps_navigation">BP-GPS Navigation</string>
+    <string name="badge_label">Badge</string>
+    <string name="default_city_state">Lafayette, LA</string>
+
+    <!-- UI: Headline & Detail -->
+    <string name="starting_lafayette_dispatch_system">Starting Lafayette Dispatch System</string>
+    <string name="checking_permissions_and_officer_login">Checking permissions and officer login…</string>
+    <string name="service_status_initializing">⚪ Service Status: Initializing</string>
+    <string name="service_status_running">Service Status: Running</string>
+    <string name="connected_to_dispatch_system">Connected to dispatch system</string>
+    <string name="listening_for_newdestination_messages">Listening for dispatch messages</string>
+
+    <!-- Battery Optimization Dialog -->
+    <string name="dialog_battery_title">Battery Optimization Required</string>
+    <string name="dialog_battery_msg">
+        For reliable dispatch notifications in the field, please disable battery optimization for BP-GPS.
+        This ensures the app stays active and receives all dispatch calls.
+    </string>
+    <string name="button_open_settings">Open Settings</string>
+    <string name="button_skip_not_recommended">Skip (Not Recommended)</string>
+    <string name="toast_battery_warning">Warning: App may not receive dispatches reliably</string>
+
+    <!-- Officer Login -->
+    <string name="dialog_login_title">Lafayette PD Officer Login</string>
+    <string name="dialog_login_msg">Please enter your Officer ID to start dispatch service</string>
+    <string name="hint_officer_id">Enter your Officer ID</string>
+    <string name="button_ok">OK</string>
+    <string name="toast_officer_required">Officer ID is required</string>
+    <string name="toast_service_started">Navigation service started for Officer %1$s</string>
+
+    <!-- Activity Status Fallbacks -->
+    <string name="ui_title_connected">Connected to Lafayette Dispatch</string>
+    <string name="ui_title_connecting">Connecting to Lafayette Dispatch</string>
+    <string name="ui_title_starting">Starting Lafayette Dispatch System</string>
+    <string name="ui_title_reconnecting">Reconnecting to Lafayette Dispatch</string>
+    <string name="ui_title_failed">Lafayette Dispatch Connection Failed</string>
+    <string name="ui_title_active">Lafayette Dispatch Navigation Active</string>
+    <string name="ui_title_setup_error">Lafayette Dispatch Setup Error</string>
+    <string name="ui_title_stopped">Lafayette Dispatch Service Stopped</string>
+
+    <string name="ui_chip_connected">🟢 Service Status: Running</string>
+    <string name="ui_chip_connecting">🟡 Service Status: Connecting</string>
+    <string name="ui_chip_starting">🔄 Service Status: Starting</string>
+    <string name="ui_chip_disconnected">🔴 Service Status: Disconnected</string>
+    <string name="ui_chip_failed">❌ Service Status: Failed</string>
+    <string name="ui_chip_active">📍 Service Status: Active</string>
+    <string name="ui_chip_setup_error">⚠️ Service Status: Setup Error</string>
+    <string name="ui_chip_stopped">⏹️ Service Status: Stopped</string>
+    <string name="ui_chip_unknown">⚪ Service Status: %1$s</string>
+
+    <string name="ui_detail_default">Status: %1$s</string>
+    <string name="ui_detail_login_required">Officer login required…</string>
+    <string name="ui_detail_starting_for">Starting service for Officer %1$s…</string>
+    <string name="detail_checking_permissions">Checking notification permissions…</string>
+    <string name="detail_disable_battery_opt">Please disable battery optimization, then return to app…</string>
+    <string name="detail_initializing">Initializing dispatch connection…</string>
+    <string name="detail_service_stopped">Dispatch service stopped</string>
+    <string name="detail_reconnecting">Connection lost - Reconnecting…</string>
+    <string name="detail_retrying">SignalR setup error - Retrying…</string>
+    <string name="detail_negotiating">Negotiating with dispatch server…</string>
+    <string name="detail_establishing">Establishing secure connection…</string>
+    <string name="detail_listening">Listening for dispatch messages</string>
+    <string name="detail_retrying_in">Retrying in %1$d seconds…</string>
+    <string name="detail_server_event">Server event received: %1$s</string>
+    <string name="detail_opening_nav">Opening navigation to: %1$s</string>
+    <string name="detail_invalid_dispatch">Invalid dispatch received - Still listening…</string>
+    <string name="detail_maps_failed">Maps launch failed - Still listening…</string>
+
+
+    <!-- Notification Channel -->
+    <string name="channel_alerts_name">BP‑GPS Dispatch Alerts</string>
+    <string name="channel_alerts_desc">Heads‑up notifications for new or updated dispatches</string>
+
+    <!-- Persistent Notification -->
+    <string name="notif_ongoing_title">BP-GPS Dispatch - Lafayette PD</string>
+    <string name="action_open_maps">Open Maps</string>
+
+    <!-- Connection Status Notifications -->
+    <string name="notif_connecting">🔄 Connecting to Dispatch…</string>
+    <string name="notif_negotiating">🤝 Negotiating connection…</string>
+    <string name="notif_connecting_dispatch">🔗 Connecting to dispatch…</string>
+    <string name="notif_connected_listening">🟢 Connected - Listening for dispatches</string>
+    <string name="notif_conn_lost">📡 Connection lost - Reconnecting…</string>
+    <string name="notif_setup_failed">❌ Setup failed - Retrying…</string>
+    <string name="notif_retrying">❌ Connection failed - Retrying in %1$d s…</string>
+    <string name="notif_server_event">🔔 Server event: %1$s</string>
+
+    <!-- Dispatch Notifications -->
+    <string name="notif_dispatch_prefix">📍 Dispatch: %1$s…</string>
+    <string name="notif_officer_suffix">(Officer: %1$s)</string>
+    <string name="notif_invalid_dispatch">⚠️ Invalid dispatch message</string>
+    <string name="notif_maps_launch_failed">❌ Maps launch failed</string>
+    <string name="notif_new_dispatch_title">New Dispatch - Lafayette PD</string>
+
+    <!-- Service → Activity Status tokens -->
+    <string name="status_starting">Starting</string>
+    <string name="status_stopped">Stopped</string>
+    <string name="status_connected">Connected</string>
+    <string name="status_connecting">Connecting</string>
+    <string name="status_disconnected">Disconnected</string>
+    <string name="status_setup_failed">Setup Failed</string>
+    <string name="status_connection_failed">Connection Failed</string>
+    <string name="status_dispatch_received">Dispatch Received</string>
+
+    <!-- Officer Management -->
+    <string name="officer_section_title">Officer Settings</string>
+    <string name="current_officer_format">Current Officer: %1$s</string>
+    <string name="no_officer_selected">No officer selected</string>
+    <string name="edit_rcn">Edit RCN</string>
+    <string name="dialog_edit_officer_title">Edit Officer ID</string>
+    <string name="dialog_edit_officer_msg">Enter the new officer ID (RCN) to receive dispatches for:</string>
+    <string name="button_save">Save</string>
+    <string name="button_cancel">Cancel</string>
+    <string name="toast_officer_updated">Officer ID updated to: %1$s</string>
+
+    <!-- Filter Controls -->
+    <string name="filter_button_show_all">Show All</string>
+    <string name="filter_button_show_mine">Show Mine</string>
+    <string name="toast_showing_all_addresses">Showing all addresses</string>
+    <string name="toast_showing_officer_addresses">Showing addresses for Officer %1$s</string>
+
+    <!-- History Section -->
+    <string name="history_section_title">Recent Addresses</string>
+    <string name="history_section_subtitle">Tap any address to navigate there</string>
+    <string name="history_empty_message">No dispatch history available</string>
+
+    <!-- Navigation -->
+    <string name="toast_navigating_to">Opening navigation to: %1$s</string>
+    <string name="toast_navigation_failed">Failed to open navigation</string>
+
+    <!-- Service Notifications - Additional -->
+    <string name="notif_dispatch_other_officer">Dispatch for Officer: %1$s</string>
+    <string name="notif_manual_navigation">Manual navigation: %1$s</string>
+    <string name="detail_dispatch_other_officer">Received dispatch for Officer %1$s</string>
+    <string name="detail_manual_nav">Manually navigating to: %1$s</string>
+
+    <!-- Service Status - Additional -->
+    <string name="status_dispatch_other_officer">Dispatch for other officer</string>
+    <string name="status_manual_navigation">Manual navigation</string>
+
+    <!-- Misc -->
+    <string name="toast_notifications_required">Notification permission required</string>
+
+
+
+</resources>

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="English">
+<head>
+    <title>BP-GPS SignalR Test</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        button { padding: 10px 15px; margin: 5px; background: #007bff; color: white; border: none; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        .log { background: #f8f9fa; padding: 10px; margin: 10px 0; border-left: 4px solid #007bff; }
+        input[type="text"] { width: 300px; padding: 8px; margin: 5px; }
+    </style>
+</head>
+<body>
+<h1>🚔 BP-GPS SignalR Dispatch Tester</h1>
+
+<div>
+    <h3>Connection Status: <span id="status">Disconnected</span></h3>
+    <button onclick="connect()">Connect to SignalR</button>
+    <button onclick="disconnect()">Disconnect</button>
+</div>
+
+<div>
+    <h3>📡 Send Test Dispatches</h3>
+    <label for="address"></label><input type="text" id="address" placeholder="Enter address here">
+    <label for="policeId"></label><input type="text" id="policeId" value="111">
+    <br>
+    <button onclick="sendDispatch('Address')">Send Address</button>
+
+</div>
+
+<div id="logs">
+    <h3>📝 Logs</h3>
+</div>
+
+<script>
+    let connection = null;
+
+    function log(message) {
+        const logs = document.getElementById('logs');
+        const logDiv = document.createElement('div');
+        logDiv.className = 'log';
+        logDiv.textContent = new Date().toLocaleTimeString() + ': ' + message;
+        logs.appendChild(logDiv);
+    }
+
+    async function connect() {
+        try {
+            // First negotiate
+            const negotiateResponse = await fetch('https://bp-gps-app.azurewebsites.net/api/negotiate', {
+                method: 'POST'
+            });
+            const negotiateData = await negotiateResponse.json();
+
+            connection = new signalR.HubConnectionBuilder()
+                .withUrl(negotiateData.url, {
+                    accessTokenFactory: () => negotiateData.accessToken
+                })
+                .build();
+
+            connection.onclose((error) => {
+                log('❌ Connection closed: ' + (error ? error.toString() : 'Unknown reason'));
+                document.getElementById('status').textContent = 'Disconnected';
+            });
+
+            await connection.start();
+            log('✅ Connected to SignalR Hub!');
+            document.getElementById('status').textContent = 'Connected ✅';
+
+        } catch (error) {
+            log('❌ Connection failed: ' + error.toString());
+        }
+    }
+
+    async function disconnect() {
+        if (connection) {
+            await connection.stop();
+            log('🔌 Disconnected from SignalR');
+            document.getElementById('status').textContent = 'Disconnected';
+        }
+    }
+
+    async function sendDispatch(method) {
+        const address = document.getElementById('address').value;
+        const policeId = document.getElementById('policeId').value.trim();
+
+        // Build message object with only non-empty fields
+        const msgObj = { address: address };
+        if (policeId.length > 0) {
+            msgObj.policeId = policeId;
+        }
+
+        const message = JSON.stringify(msgObj);
+
+        // Build the backend body object, also omitting policeId if blank
+        const backendBody = {
+            target: method,
+            message: message,
+            address: address
+        };
+        if (policeId.length > 0) {
+            backendBody.policeId = policeId;
+        }
+
+        try {
+            const response = await fetch('https://bp-gps-app.azurewebsites.net/api/receiveAddress', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(backendBody)
+            });
+
+            if (response.ok) {
+                const result = await response.text();
+                log(`📤 SUCCESS via receiveAddress: ${message}`);
+                log(`📋 Server response: ${result}`);
+            } else {
+                const errorText = await response.text();
+                log(`❌ HTTP ${response.status}: ${errorText}`);
+            }
+        } catch (error) {
+            log(`❌ Failed to send: ${error.toString()}`);
+        }
+    }
+
+</script>
+</body>
+</html>
