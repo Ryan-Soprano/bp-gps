@@ -1,32 +1,27 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
 
-    <style name="Theme.BpGps" parent="Theme.Material3.DayNight">
+    <style name="Theme.BpGps" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Primary colors -->
-        <item name="colorPrimary">#003366</item>
-        <item name="colorPrimaryVariant">#001122</item>
-        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimary">@color/police_blue</item>
+        <item name="colorOnPrimary">@color/white</item>
 
         <!-- Secondary colors -->
-        <item name="colorSecondary">#FFD700</item>
-        <item name="colorSecondaryVariant">#FFD700</item>
-        <item name="colorOnSecondary">#000000</item>
+        <item name="colorSecondary">@color/badge_gold</item>
+        <item name="colorOnSecondary">@color/black</item>
 
         <!-- Background colors -->
-        <item name="android:colorBackground">#FFFFFF</item>
-        <item name="colorSurface">#F5F5F5</item>
-        <item name="colorOnBackground">#000000</item>
-        <item name="colorOnSurface">#000000</item>
+        <item name="android:colorBackground">@color/colorBackground</item>
+        <item name="colorSurface">@color/colorSurface</item>
+        <item name="colorOnBackground">@color/colorOnBackground</item>
+        <item name="colorOnSurface">@color/colorOnSurface</item>
 
         <!-- Status bar -->
-        <item name="android:statusBarColor">#001122</item>
+        <item name="android:statusBarColor">@color/police_blue_dark</item>
         <item name="android:windowLightStatusBar">false</item>
 
-        <!-- Navigation bar -->
-        <item name="android:navigationBarColor">#003366</item>
-
-        <!-- Text colors -->
-        <item name="android:textColorPrimary">#000000</item>
-        <item name="android:textColorSecondary">#757575</item>
+        <!-- Default button style -->
+        <item name="materialButtonStyle">@style/Button.App</item>
     </style>
 
 </resources>

@@ -13,7 +13,6 @@ import android.net.Uri
 import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.edit
 import androidx.core.net.toUri
 import com.example.bp_gps.R
@@ -22,7 +21,12 @@ import com.microsoft.signalr.HubConnection
 import com.microsoft.signalr.HubConnectionBuilder
 import com.microsoft.signalr.HubConnectionState
 import com.microsoft.signalr.TransportEnum
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import org.json.JSONObject
 import java.net.HttpURLConnection
@@ -71,7 +75,6 @@ class NavigationService : Service() {
     private var isReconnecting = false
     private var lastStatusCode: String? = null
 
-
     override fun onCreate() {
         super.onCreate()
         createNotificationChannels()
@@ -81,9 +84,8 @@ class NavigationService : Service() {
         officerId = intent?.getStringExtra("officer_id")
             ?: getSharedPreferences(PREFS, MODE_PRIVATE).getString(KEY_OFFICER_ID, "").orEmpty()
 
-        // Start foreground with a “connecting” message
         startForeground(NOTIF_PERSISTENT_ID, buildPersistentNotification(getString(R.string.notif_connecting)))
-        broadcastStatus(CODE_STARTING, getString(R.string.detail_initializing))
+        broadcastStatus(CODE_STARTING, getString(R.string.status_starting))
 
         connectToSignalR()
         return START_STICKY
@@ -91,12 +93,13 @@ class NavigationService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
-        broadcastStatus(CODE_STOPPED, getString(R.string.detail_service_stopped))
+        broadcastStatus(CODE_STOPPED, getString(R.string.status_stopped))
         disconnectSignalR()
         job.cancel()
     }
 
     override fun onBind(intent: Intent?): IBinder? = null
+
     private fun broadcastStatus(code: String, detail: String = "") {
         val statusText = when (code) {
             CODE_STARTING          -> getString(R.string.status_starting)
@@ -124,7 +127,6 @@ class NavigationService : Service() {
         lastStatusCode = code
     }
 
-
     private fun broadcastHistoryUpdate() {
         sendBroadcast(Intent(HISTORY_UPDATE_ACTION))
     }
@@ -133,8 +135,17 @@ class NavigationService : Service() {
         try {
             val prefs = getSharedPreferences(HISTORY_PREFS, MODE_PRIVATE)
             val current = loadHistory().toMutableList()
+
+            current.removeAll {
+                it.address.equals(address, ignoreCase = true) &&
+                        it.officerId.equals(officer, ignoreCase = true)
+            }
+
             current.add(0, HistoryRow(address, officer, System.currentTimeMillis()))
-            if (current.size > MAX_HISTORY_SIZE) current.subList(MAX_HISTORY_SIZE, current.size).clear()
+
+            if (current.size > MAX_HISTORY_SIZE) {
+                current.subList(MAX_HISTORY_SIZE, current.size).clear()
+            }
 
             val arr = JSONArray()
             current.forEach {
@@ -146,6 +157,8 @@ class NavigationService : Service() {
             }
             prefs.edit { putString(HISTORY_KEY, arr.toString()) }
             broadcastHistoryUpdate()
+            Log.d(TAG, "✅ Saved history: $address for officer: $officer")
+
         } catch (e: Exception) {
             Log.e(TAG, "History save failed", e)
         }
@@ -163,12 +176,13 @@ class NavigationService : Service() {
         Log.e(TAG, "History load failed", e)
         emptyList()
     }
+
     private fun connectToSignalR() {
         scope.launch(Dispatchers.IO) {
             try {
                 withContext(Dispatchers.Main) {
                     updatePersistent(getString(R.string.notif_negotiating))
-                    broadcastStatus(CODE_CONNECTING, getString(R.string.detail_negotiating))
+                    broadcastStatus(CODE_CONNECTING, getString(R.string.status_connecting))
                 }
 
                 val result = negotiateConnection() ?: throw Exception("Negotiate failed")
@@ -179,21 +193,23 @@ class NavigationService : Service() {
                 if (hub?.connectionState == HubConnectionState.DISCONNECTED) {
                     withContext(Dispatchers.Main) {
                         updatePersistent(getString(R.string.notif_connecting_dispatch))
-                        broadcastStatus(CODE_CONNECTING, getString(R.string.detail_establishing))
+                        broadcastStatus(CODE_CONNECTING, getString(R.string.status_connecting))
                     }
                     hub?.start()?.blockingAwait() // still on IO
                     withContext(Dispatchers.Main) {
                         updatePersistent(getString(R.string.notif_connected_listening))
-                        broadcastStatus(CODE_CONNECTED, getString(R.string.detail_listening))
+                        broadcastStatus(CODE_CONNECTED, getString(R.string.status_connected))
                     }
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "connectToSignalR error", e)
                 withContext(Dispatchers.Main) {
-                    updatePersistent(getString(R.string.notif_retrying, RECONNECT_DELAY_MS / 1000))
+                    updatePersistent(
+                        text = getString(R.string.notif_retrying, RECONNECT_DELAY_MS / 1000)
+                    )
                     broadcastStatus(
-                        CODE_CONNECTION_FAILED,
-                        getString(R.string.detail_retrying_in, RECONNECT_DELAY_MS / 1000)
+                        code = CODE_CONNECTION_FAILED,
+                        detail = getString(R.string.detail_retrying_in, RECONNECT_DELAY_MS / 1000)
                     )
                 }
                 safeReconnect()
@@ -283,22 +299,26 @@ class NavigationService : Service() {
             true
         }
     }
-
     private fun handleDispatch(message: DispatchMessage) {
         val raw = message.address
         if (raw.isBlank()) return
 
         val address = cleanAndFormatAddress(raw)
         val incomingOfficer = message.policeId.orEmpty()
-        saveHistory(address, incomingOfficer)
 
         val shouldNavigate = incomingOfficer.isNotBlank() &&
                 officerId.isNotBlank() &&
                 incomingOfficer.equals(officerId, ignoreCase = true)
 
-        if (!shouldHandle(address)) return
-
         if (shouldNavigate) {
+            if (!shouldHandle(address)) {
+                Log.d(TAG, "⭐️ Debounced duplicate: $address")
+                saveHistory(address, incomingOfficer)
+                return
+            }
+
+            saveHistory(address, incomingOfficer)
+
             currentAddressForAction = address
             playNotificationSound()
             openGoogleMaps(address)
@@ -310,6 +330,7 @@ class NavigationService : Service() {
                 broadcastStatus(CODE_CONNECTED, getString(R.string.detail_listening))
             }
         } else {
+            saveHistory(address, incomingOfficer)
             broadcastStatus(CODE_CONNECTED, getString(R.string.detail_dispatch_other_officer, incomingOfficer))
         }
     }
@@ -337,7 +358,10 @@ class NavigationService : Service() {
             val uri = "geo:0,0?q=${Uri.encode(address)}".toUri()
             startActivity(Intent(Intent.ACTION_VIEW, uri).apply {
                 setPackage("com.google.android.apps.maps")
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or
+                        Intent.FLAG_ACTIVITY_CLEAR_TOP or
+                        Intent.FLAG_ACTIVITY_SINGLE_TOP
+                putExtra("android.intent.extra.WINDOW_FEATURES", "maximized")
             })
         }.onFailure {
             Log.e(TAG, "Maps launch failed: $address", it)
@@ -369,6 +393,7 @@ class NavigationService : Service() {
         (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)
             .notify(NOTIF_DISPATCH_ID, notif)
     }
+
     private fun showConnectionLostNotification() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
             val granted = androidx.core.content.ContextCompat.checkSelfPermission(
@@ -378,7 +403,7 @@ class NavigationService : Service() {
             if (!granted) return
         }
 
-        val notification = NotificationCompat.Builder(this, CHANNEL_ID_ALERTS) // use existing alerts channel
+        val notification = NotificationCompat.Builder(this, CHANNEL_ID_ALERTS)
             .setContentTitle(getString(R.string.notif_conn_lost))
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setCategory(NotificationCompat.CATEGORY_ERROR)
@@ -389,7 +414,6 @@ class NavigationService : Service() {
         androidx.core.app.NotificationManagerCompat.from(this)
             .notify(NOTIF_CONN_ALERT_ID, notification)
     }
-
 
     private fun createNotificationChannels() {
         val nm = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager

@@ -1,86 +1,93 @@
 <resources>
 
-    <!-- App -->
     <string name="app_name">BP-GPS</string>
     <string name="default_city_state">Lafayette, LA</string>
 
-    <!-- One-line chip text for the service status (used in MainActivity) -->
-    <string name="ui_chip_connected">🟢 Service Status: Running</string>
-    <string name="ui_chip_connecting">🟡 Service Status: Connecting</string>
-    <string name="ui_chip_starting">🔄 Service Status: Starting</string>
-    <string name="ui_chip_disconnected">🔴 Service Status: Disconnected</string>
-    <string name="ui_chip_failed">❌ Service Status: Failed</string>
-    <string name="ui_chip_active">📍 Service Status: Active</string>
-    <string name="ui_chip_setup_error">⚠️ Service Status: Setup Error</string>
-    <string name="ui_chip_stopped">⏹️ Service Status: Stopped</string>
-    <string name="ui_chip_unknown">Service Status: %1$s</string>
+    <!-- Main UI Elements -->
+    <string name="caption_officer_none">No officer selected</string>
+    <string name="caption_officer_id">Officer: %1$s</string>
+    <string name="officer_indicator">• Officer %1$s</string>
+    <string name="recent_addresses">Recent Addresses</string>
+    <string name="empty_no_dispatches">No dispatches yet</string>
 
-    <!-- Canonical status words (used by NavigationService.broadcastStatus) -->
+    <!-- Buttons -->
+    <string name="button_edit_rcn">Edit RCN</string>
+    <string name="button_show_all">Show All</string>
+    <string name="button_filter_to_rcn">Filter to RCN</string>
+    <string name="button_clear_short">Clear</string>
+    <string name="button_ok">OK</string>
+    <string name="button_clear">Clear</string>
+    <string name="button_delete">Delete</string>
+    <string name="button_cancel">Cancel</string>
+
+    <!-- Dialog Titles -->
+    <string name="dialog_login_title">Officer Login</string>
+    <string name="dialog_clear_history_title">Clear history?</string>
+    <string name="dialog_clear_all_history_title">Clear All History</string>
+    <string name="dialog_delete_entry_title">Remove address?</string>
+    <string name="dialog_clear_options_title">Clear History</string>
+
+    <!-- Dialog Messages -->
+    <string name="dialog_login_msg">Enter your current RCN</string>
+    <string name="msg_clear_history_officer">This will remove all saved addresses for Officer %1$s.</string>
+    <string name="msg_clear_all_history">This will permanently remove ALL dispatch history from this device for ALL officers.\n\nAre you sure you want to continue?</string>
+    <string name="msg_delete_entry">Delete \"%1$s\" from history?</string>
+
+    <!-- Dialog Options -->
+    <string name="option_clear_current_officer">Clear current officer history</string>
+    <string name="option_clear_all_history">Clear ALL history</string>
+
+    <!-- Input Fields -->
+    <string name="hint_officer_id">Officer RCN</string>
+
+    <!-- Toast Messages -->
+    <string name="toast_notifications_required">Notification permission required</string>
+    <string name="toast_officer_required">Officer ID is required</string>
+    <string name="toast_service_started">Navigation service started for Officer %1$s</string>
+    <string name="toast_history_cleared">History cleared</string>
+    <string name="toast_all_history_cleared">All history cleared</string>
+    <string name="toast_entry_removed">Entry removed</string>
+
+    <!-- Service Status (Internal) -->
     <string name="status_starting">Starting</string>
-    <string name="status_stopped">Stopped</string>
-    <string name="status_connected">Connected</string>
     <string name="status_connecting">Connecting</string>
+    <string name="status_connected">Connected</string>
     <string name="status_disconnected">Disconnected</string>
-    <string name="status_setup_failed">Setup Failed</string>
     <string name="status_connection_failed">Connection Failed</string>
+    <string name="status_setup_failed">Setup Failed</string>
     <string name="status_dispatch_received">Dispatch Received</string>
+    <string name="status_stopped">Stopped</string>
 
-    <!-- Detail messages that the service may broadcast -->
-    <string name="detail_initializing">Initializing dispatch connection…</string>
-    <string name="detail_reconnecting">Connection lost - Reconnecting…</string>
-    <string name="detail_retrying">SignalR setup error - Retrying…</string>
-    <string name="detail_negotiating">Negotiating with dispatch server…</string>
-    <string name="detail_establishing">Establishing secure connection…</string>
-    <string name="detail_listening">Listening for dispatch messages</string>
-    <string name="detail_retrying_in">Retrying in %1$d seconds…</string>
-    <string name="detail_server_event">Server event received: %1$s</string>
-    <string name="detail_opening_nav">Opening navigation to: %1$s</string>
-    <string name="detail_invalid_dispatch">Invalid dispatch received - Still listening…</string>
-    <string name="detail_maps_failed">Maps launch failed - Still listening…</string>
-    <string name="detail_dispatch_other_officer">Dispatch for other officer (%1$s)</string>
-    <string name="detail_service_stopped">Dispatch service stopped</string>
-
-    <!-- Notification channel texts -->
-    <string name="channel_name">BP-GPS Dispatch Service</string>
-    <string name="channel_desc">Lafayette law enforcement dispatch navigation service</string>
-    <string name="channel_alerts_name">BP-GPS Dispatch Alerts</string>
-    <string name="channel_alerts_desc">Heads-up notifications for new or updated dispatches</string>
-
-    <!-- Persistent notification content -->
+    <!-- Service Notifications -->
     <string name="notif_ongoing_title">BP-GPS Dispatch - Lafayette PD</string>
-    <string name="action_open_maps">Open Maps</string>
+    <string name="notif_new_dispatch_title">New Dispatch - Lafayette PD</string>
     <string name="notif_connecting">🔄 Connecting to Dispatch…</string>
     <string name="notif_negotiating">🤝 Negotiating connection…</string>
     <string name="notif_connecting_dispatch">🔗 Connecting to dispatch…</string>
     <string name="notif_connected_listening">🟢 Connected - Listening for dispatches</string>
     <string name="notif_conn_lost">📡 Connection lost - Reconnecting…</string>
-    <string name="notif_setup_failed">❌ Setup failed - Retrying…</string>
-    <string name="notif_retrying">❌ Connection failed - Retrying in %1$d s…</string>
-    <string name="notif_server_event">🔔 Server event: %1$s</string>
-    <string name="notif_dispatch_prefix">📍 Dispatch: %1$s…</string>
-    <string name="notif_officer_suffix">(Officer: %1$s)</string>
-    <string name="notif_invalid_dispatch">⚠️ Invalid dispatch message</string>
-    <string name="notif_maps_launch_failed">❌ Maps launch failed</string>
-    <string name="notif_new_dispatch_title">New Dispatch - Lafayette PD</string>
+    <string name="notif_setup_failed">⚠ Setup failed - Retrying…</string>
+    <string name="notif_retrying">⚠ Connection failed - Retrying in %1$d s…</string>
+    <string name="notif_server_event">📢 Server event: %1$s</string>
+    <string name="notif_maps_launch_failed">⚠ Maps launch failed</string>
+    <string name="action_open_maps">Open Maps</string>
 
-    <!-- Officer section / UI -->
-    <string name="caption_officer_none">No officer selected</string>
-    <string name="caption_officer_id">Officer: %1$s</string>
-    <string name="button_edit_rcn">Edit RCN</string>
-    <string name="button_show_all">Show All</string>
-    <string name="button_filter_to_rcn">Filter to RCN</string>
-    <string name="recent_addresses">Recent Addresses</string>
-    <string name="empty_no_dispatches">No dispatches yet</string>
+    <!-- Service Details (Internal) -->
+    <string name="detail_reconnecting">Connection lost - Reconnecting…</string>
+    <string name="detail_retrying">SignalR setup error - Retrying…</string>
+    <string name="detail_listening">Listening for dispatch messages</string>
+    <string name="detail_retrying_in">Retrying in %1$d seconds…</string>
+    <string name="detail_server_event">Server event received: %1$s</string>
+    <string name="detail_opening_nav">Opening navigation to: %1$s</string>
+    <string name="detail_maps_failed">Maps launch failed - Still listening…</string>
+    <string name="detail_dispatch_other_officer">Dispatch for other officer (%1$s)</string>
 
-    <!-- Dialog / inputs -->
-    <string name="dialog_login_title">Officer Login</string>
-    <string name="dialog_login_msg">Enter your current RCN</string>
-    <string name="hint_officer_id">Officer RCN</string>
-    <string name="button_ok">OK</string>
+    <!-- Notification Channels -->
+    <string name="channel_name">BP-GPS Dispatch Service</string>
+    <string name="channel_desc">Lafayette law enforcement dispatch navigation service</string>
+    <string name="channel_alerts_name">BP-GPS Dispatch Alerts</string>
+    <string name="channel_alerts_desc">Heads-up notifications for new or updated dispatches</string>
 
-    <!-- Toasts -->
-    <string name="toast_notifications_required">Notification permission required</string>
-    <string name="toast_officer_required">Officer ID is required</string>
-    <string name="toast_service_started">Navigation service started for Officer %1$s</string>
+    <string name="content_desc_location_pin">Location pin</string>
 
 </resources>
