@@ -1,142 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="?android:attr/colorBackground">
 
-    <!-- Status Section -->
-    <LinearLayout
+    <TextView
+        android:id="@+id/appTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@drawable/rounded_background"
-        android:padding="16dp"
-        android:layout_marginBottom="16dp">
+        android:text="@string/app_name"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:paddingBottom="12dp" />
 
-        <TextView
-            android:id="@+id/serviceStatusText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/ui_chip_starting"
-            android:textStyle="bold"
-            android:textSize="14sp"
-            android:background="@drawable/status_chip_background"
-            android:paddingHorizontal="12dp"
-            android:paddingVertical="4dp"
-            android:layout_marginBottom="8dp" />
-
-        <TextView
-            android:id="@+id/connectionStatusText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/ui_title_starting"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="4dp" />
-
-        <TextView
-            android:id="@+id/statusDetailText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/detail_initializing"
-            android:textSize="14sp"
-            android:textColor="@android:color/darker_gray" />
-    </LinearLayout>
-
-    <!-- Officer Management Section -->
-    <LinearLayout
+    <TextView
+        android:id="@+id/tvOfficerCaption"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@drawable/rounded_background"
-        android:padding="16dp"
-        android:layout_marginBottom="16dp">
+        android:text="@string/caption_officer_none"
+        android:textSize="14sp"
+        android:paddingBottom="8dp" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/officer_section_title"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="8dp" />
+    <LinearLayout
+        android:id="@+id/buttonRow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="2"
+        android:paddingBottom="16dp">
 
-        <TextView
-            android:id="@+id/currentOfficerText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/no_officer_selected"
-            android:textSize="14sp"
-            android:layout_marginBottom="8dp" />
+        <Button
+            android:id="@+id/btnEditRcn"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:text="@string/button_edit_rcn" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+        <Space
+            android:layout_width="12dp"
+            android:layout_height="0dp" />
 
-            <Button
-                android:id="@+id/btnEditRcn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/edit_rcn"
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="12dp" />
-
-            <Button
-                android:id="@+id/filterToggleButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/filter_button_show_all"
-                android:layout_marginStart="8dp" />
-        </LinearLayout>
+        <Button
+            android:id="@+id/btnToggleFilter"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:text="@string/button_show_all" />
     </LinearLayout>
 
-    <!-- Address History Section -->
-    <LinearLayout
+    <TextView
+        android:id="@+id/recentTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/recent_addresses"
+        android:textStyle="bold"
+        android:paddingBottom="8dp" />
+
+    <TextView
+        android:id="@+id/emptyView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/empty_no_dispatches"
+        android:textColor="?android:attr/textColorSecondary"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"
+        android:visibility="gone" />
+
+    <ListView
+        android:id="@+id/recentList"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:orientation="vertical"
-        android:background="@drawable/rounded_background"
-        android:padding="16dp">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/history_section_title"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="8dp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/history_section_subtitle"
-            android:textSize="12sp"
-            android:textColor="@android:color/darker_gray"
-            android:layout_marginBottom="8dp" />
-
-        <ListView
-            android:id="@+id/historyListView"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:dividerHeight="1dp"
-            android:divider="#E0E0E0"
-            tools:ignore="NestedWeights" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/history_empty_message"
-            android:textSize="14sp"
-            android:textColor="@android:color/darker_gray"
-            android:gravity="center"
-            android:padding="16dp"
-            android:visibility="gone"
-            android:id="@+id/emptyHistoryText" />
-    </LinearLayout>
-
+        android:divider="@android:color/transparent"
+        android:dividerHeight="12dp"
+        android:paddingTop="8dp"
+        android:listSelector="@android:color/transparent" />
 </LinearLayout>

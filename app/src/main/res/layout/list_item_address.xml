@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="12dp"
+    android:background="@drawable/list_item_background"
+    android:gravity="center_vertical">
+
+    <!-- Location Icon -->
+    <ImageView
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:src="@drawable/ic_dispatch_pin"
+        android:layout_marginEnd="12dp"
+        android:background="@drawable/icon_background"
+        android:padding="6dp"
+        android:scaleType="centerInside" />
+
+    <!-- Address Content -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="115 Jefferson St, Lafayette, LA"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="#1A237E"
+            android:maxLines="2"
+            android:ellipsize="end" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="2dp">
+
+            <TextView
+                android:id="@+id/tvTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2:37 PM"
+                android:textSize="12sp"
+                android:textColor="#757575"
+                android:drawableStart="@drawable/ic_time"
+                android:drawablePadding="4dp"
+                android:gravity="center_vertical" />
+
+            <TextView
+                android:id="@+id/tvOfficer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="• Officer P21"
+                android:textSize="12sp"
+                android:textColor="#D32F2F"
+                android:textStyle="bold"
+                android:layout_marginStart="8dp"
+                android:visibility="gone" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Status Indicator -->
+    <View
+        android:id="@+id/statusIndicator"
+        android:layout_width="4dp"
+        android:layout_height="40dp"
+        android:background="@drawable/status_indicator"
+        android:layout_marginStart="8dp" />
+
+</LinearLayout>
