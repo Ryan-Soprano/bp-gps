@@ -19,6 +19,7 @@
     <string name="button_clear">Clear</string>
     <string name="button_delete">Delete</string>
     <string name="button_cancel">Cancel</string>
+    <string name="button_load_more">Load More</string>
 
     <!-- Dialog Titles -->
     <string name="dialog_login_title">Officer Login</string>
@@ -89,5 +90,17 @@
     <string name="channel_alerts_desc">Heads-up notifications for new or updated dispatches</string>
 
     <string name="content_desc_location_pin">Location pin</string>
+
+    <!-- Favorites Panel -->
+    <string name="favorites_title">Quick Locations</string>
+    <string name="favorites_expand">▼</string>
+    <string name="favorites_collapse">▲</string>
+    <string name="location_lpd">LPD</string>
+    <string name="location_lpso">LPSO</string>
+    <string name="location_umc">UMC</string>
+    <string name="location_lourdes">Lourdes</string>
+    <string name="location_olol">OLOL</string>
+    <string name="location_parish_courthouse">Parish Courthouse</string>
+    <string name="location_city_hall">City Hall</string>
 
 </resources>

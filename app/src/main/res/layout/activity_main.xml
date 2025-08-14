@@ -18,6 +18,160 @@
         app:title="@string/app_name"
         app:titleTextColor="@color/white" />
 
+    <!-- Expandable Favorites Panel -->
+    <LinearLayout
+        android:id="@+id/favoritesPanel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/police_blue"
+        android:elevation="2dp">
+
+        <!-- Favorites Header (Clickable to expand/collapse) -->
+        <LinearLayout
+            android:id="@+id/favoritesHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="@dimen/main_padding"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?android:attr/selectableItemBackground">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/favorites_title"
+                android:textAppearance="@style/TextAppearance.App.SectionTitle"
+                android:textColor="@color/white" />
+
+            <TextView
+                android:id="@+id/favoritesExpandIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/favorites_expand"
+                android:textSize="18sp"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <!-- Favorites Buttons Container (Initially hidden) -->
+        <LinearLayout
+            android:id="@+id/favoritesButtonsContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/main_padding"
+            android:visibility="gone">
+
+            <!-- Row 1: LPD, LPSO -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:paddingBottom="@dimen/button_spacing">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnLPD"
+                    style="@style/Button.App.Police"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="@dimen/button_spacing"
+                    android:text="@string/location_lpd" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnLPSO"
+                    style="@style/Button.App.Police"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="@dimen/button_spacing"
+                    android:text="@string/location_lpso" />
+
+            </LinearLayout>
+
+            <!-- Row 2: UMC, Lourdes -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:paddingBottom="@dimen/button_spacing">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnUMC"
+                    style="@style/Button.App.Police"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="@dimen/button_spacing"
+                    android:text="@string/location_umc" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnLourdes"
+                    style="@style/Button.App.Police"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="@dimen/button_spacing"
+                    android:text="@string/location_lourdes" />
+
+            </LinearLayout>
+
+            <!-- Row 3: OLOL, Parish Courthouse -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:paddingBottom="@dimen/button_spacing">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnOLOL"
+                    style="@style/Button.App.Police"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="@dimen/button_spacing"
+                    android:text="@string/location_olol" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnParishCourthouse"
+                    style="@style/Button.App.Police"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="@dimen/button_spacing"
+                    android:text="@string/location_parish_courthouse" />
+
+            </LinearLayout>
+
+            <!-- Row 4: City Hall (centered) -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnCityHall"
+                    style="@style/Button.App.Police"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:text="@string/location_city_hall" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
     <!-- Main Content with padding -->
     <LinearLayout
         android:layout_width="match_parent"
@@ -84,36 +238,54 @@
         </LinearLayout>
 
         <!-- List Container with Empty View -->
-        <FrameLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:orientation="vertical">
 
-            <!-- Address List -->
-            <ListView
-                android:id="@+id/recentList"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:divider="@android:color/transparent"
-                android:dividerHeight="@dimen/list_item_spacing"
-                android:fastScrollEnabled="true"
-                android:scrollbars="vertical"
-                android:listSelector="@android:color/transparent"
-                android:clipToPadding="false"
-                android:paddingTop="@dimen/list_item_spacing" />
+                android:layout_height="0dp"
+                android:layout_weight="1">
 
-            <!-- Empty View -->
-            <TextView
-                android:id="@+id/emptyView"
+                <!-- Address List -->
+                <ListView
+                    android:id="@+id/recentList"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:divider="@android:color/transparent"
+                    android:dividerHeight="@dimen/list_item_spacing"
+                    android:fastScrollEnabled="true"
+                    android:scrollbars="vertical"
+                    android:listSelector="@android:color/transparent"
+                    android:clipToPadding="false"
+                    android:paddingTop="@dimen/list_item_spacing" />
+
+                <!-- Empty View -->
+                <TextView
+                    android:id="@+id/emptyView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/empty_no_dispatches"
+                    android:textAppearance="@style/TextAppearance.App.EmptyState"
+                    android:gravity="center"
+                    android:visibility="gone" />
+
+            </FrameLayout>
+
+            <!-- Load More Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnLoadMore"
+                style="@style/Button.App"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="@string/empty_no_dispatches"
-                android:textAppearance="@style/TextAppearance.App.EmptyState"
-                android:gravity="center"
+                android:layout_margin="@dimen/main_padding"
+                android:text="@string/button_load_more"
                 android:visibility="gone" />
 
-        </FrameLayout>
+        </LinearLayout>
 
     </LinearLayout>
 

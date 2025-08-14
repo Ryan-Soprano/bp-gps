@@ -21,6 +21,7 @@
 
     <!-- Law Enforcement Theme Colors -->
     <color name="police_blue">#003366</color>
+    <color name="police_blue_light">#1E5A96</color>
     <color name="police_blue_dark">#001122</color>
     <color name="badge_gold">#FFD700</color>
 

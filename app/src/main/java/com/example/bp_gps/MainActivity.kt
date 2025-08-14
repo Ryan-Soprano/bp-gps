@@ -32,13 +32,34 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btnEditRcn: MaterialButton
     private lateinit var btnToggleFilter: MaterialButton
     private lateinit var btnClearHistory: MaterialButton
-    private lateinit var list: ListView
-    private lateinit var emptyView: TextView
     private lateinit var buttonContainer: LinearLayout
     private lateinit var recentTitle: TextView
+    private lateinit var list: ListView
+    private lateinit var emptyView: TextView
+    
+    // Favorites Panel Views
+    private lateinit var favoritesPanel: LinearLayout
+    private lateinit var favoritesHeader: LinearLayout
+    private lateinit var favoritesExpandIcon: TextView
+    private lateinit var favoritesButtonsContainer: LinearLayout
+    private lateinit var btnLPD: MaterialButton
+    private lateinit var btnLPSO: MaterialButton
+    private lateinit var btnUMC: MaterialButton
+    private lateinit var btnLourdes: MaterialButton
+    private lateinit var btnOLOL: MaterialButton
+    private lateinit var btnParishCourthouse: MaterialButton
+    private lateinit var btnCityHall: MaterialButton
+    
     private val rawItems = mutableListOf<HistoryItem>()
+    private val allItems = mutableListOf<HistoryItem>() // All available items
     private lateinit var adapter: ArrayAdapter<HistoryItem>
     private var filterToOfficer: Boolean = true
+    
+    // Pagination variables
+    private val itemsPerPage = 10
+    private var currentPage = 0
+    private var totalPages = 0
+    private lateinit var btnLoadMore: MaterialButton
 
     data class HistoryItem(
         val address: String,
@@ -80,6 +101,20 @@ class MainActivity : AppCompatActivity() {
         recentTitle = findViewById(R.id.recentTitle)
         list = findViewById(R.id.recentList)
         emptyView = findViewById(R.id.emptyView)
+
+        // Initialize Favorites Panel Views
+        favoritesPanel = findViewById(R.id.favoritesPanel)
+        favoritesHeader = findViewById(R.id.favoritesHeader)
+        favoritesExpandIcon = findViewById(R.id.favoritesExpandIcon)
+        favoritesButtonsContainer = findViewById(R.id.favoritesButtonsContainer)
+        btnLPD = findViewById(R.id.btnLPD)
+        btnLPSO = findViewById(R.id.btnLPSO)
+        btnUMC = findViewById(R.id.btnUMC)
+        btnLourdes = findViewById(R.id.btnLourdes)
+        btnOLOL = findViewById(R.id.btnOLOL)
+        btnParishCourthouse = findViewById(R.id.btnParishCourthouse)
+        btnCityHall = findViewById(R.id.btnCityHall)
+        btnLoadMore = findViewById(R.id.btnLoadMore)
 
         list.emptyView = emptyView
     }
@@ -149,11 +184,19 @@ class MainActivity : AppCompatActivity() {
             true
         }
 
+        // Setup Load More button
+        btnLoadMore.setOnClickListener {
+            loadMoreItems()
+        }
+
+        // Setup Favorites Panel
+        setupFavoritesPanel()
+
         updateClearButtonVisibility()
     }
 
     private fun updateClearButtonVisibility() {
-        btnClearHistory.visibility = if (rawItems.isNotEmpty()) View.VISIBLE else View.GONE
+        btnClearHistory.visibility = if (allItems.isNotEmpty()) View.VISIBLE else View.GONE
     }
 
     private fun showClearOptionsDialog() {
@@ -338,14 +381,70 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadAndDisplayHistory() {
+        // Load all items first
         val items = readHistoryFromPrefs(filterToOfficer)
-        rawItems.clear()
-        rawItems.addAll(items)
-        adapter.notifyDataSetChanged()
-        emptyView.visibility =
-            if (rawItems.isEmpty()) android.view.View.VISIBLE else android.view.View.GONE
-
+        allItems.clear()
+        allItems.addAll(items)
+        
+        // Reset pagination
+        currentPage = 0
+        totalPages = if (allItems.isEmpty()) 0 else ((allItems.size - 1) / itemsPerPage) + 1
+        
+        // Load first page
+        loadPage(0)
+        
         updateClearButtonVisibility()
+        updateLoadMoreButtonVisibility()
+        updateSectionTitle()
+    }
+    
+    private fun loadPage(page: Int) {
+        val startIndex = page * itemsPerPage
+        val endIndex = minOf(startIndex + itemsPerPage, allItems.size)
+        
+        if (page == 0) {
+            // First page - clear and load
+            rawItems.clear()
+        }
+        
+        if (startIndex < allItems.size) {
+            val pageItems = allItems.subList(startIndex, endIndex)
+            rawItems.addAll(pageItems)
+            currentPage = page
+        }
+        
+        adapter.notifyDataSetChanged()
+        emptyView.visibility = if (rawItems.isEmpty()) View.VISIBLE else View.GONE
+        updateLoadMoreButtonVisibility()
+        updateSectionTitle()
+    }
+    
+    private fun loadMoreItems() {
+        if (currentPage + 1 < totalPages) {
+            loadPage(currentPage + 1)
+        }
+    }
+    
+    private fun updateLoadMoreButtonVisibility() {
+        val hasMoreItems = currentPage + 1 < totalPages
+        btnLoadMore.visibility = if (hasMoreItems && allItems.isNotEmpty()) View.VISIBLE else View.GONE
+        
+        // Update button text to show progress
+        if (hasMoreItems) {
+            val remainingItems = allItems.size - rawItems.size
+            btnLoadMore.text = getString(R.string.button_load_more) + " ($remainingItems more)"
+        }
+    }
+    
+    private fun updateSectionTitle() {
+        val baseTitle = getString(R.string.recent_addresses)
+        if (allItems.isNotEmpty()) {
+            val showing = rawItems.size
+            val total = allItems.size
+            recentTitle.text = "$baseTitle ($showing of $total)"
+        } else {
+            recentTitle.text = baseTitle
+        }
     }
 
     private fun readHistoryFromPrefs(onlyMine: Boolean): List<HistoryItem> {
@@ -452,6 +551,36 @@ class MainActivity : AppCompatActivity() {
                 // Add window flags for maximized display
                 putExtra("android.intent.extra.WINDOW_FEATURES", "maximized")
             })
+        }
+    }
+
+    private fun setupFavoritesPanel() {
+        // Header click to expand/collapse
+        favoritesHeader.setOnClickListener {
+            toggleFavoritesPanel()
+        }
+
+        // Location button click handlers
+        btnLPD.setOnClickListener { openMaps("LPD, Lafayette, LA") }
+        btnLPSO.setOnClickListener { openMaps("LPSO, Lafayette, LA") }
+        btnUMC.setOnClickListener { openMaps("UMC, Lafayette, LA") }
+        btnLourdes.setOnClickListener { openMaps("Lourdes Hospital, Lafayette, LA") }
+        btnOLOL.setOnClickListener { openMaps("Our Lady of Lourdes, Lafayette, LA") }
+        btnParishCourthouse.setOnClickListener { openMaps("Lafayette Parish Courthouse, Lafayette, LA") }
+        btnCityHall.setOnClickListener { openMaps("Lafayette City Hall, Lafayette, LA") }
+    }
+
+    private fun toggleFavoritesPanel() {
+        val isExpanded = favoritesButtonsContainer.visibility == View.VISIBLE
+        
+        if (isExpanded) {
+            // Collapse
+            favoritesButtonsContainer.visibility = View.GONE
+            favoritesExpandIcon.text = getString(R.string.favorites_expand)
+        } else {
+            // Expand
+            favoritesButtonsContainer.visibility = View.VISIBLE
+            favoritesExpandIcon.text = getString(R.string.favorites_collapse)
         }
     }
 }
